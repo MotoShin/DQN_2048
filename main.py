@@ -7,8 +7,7 @@ plt.switch_backend('agg')
 import matplotlib.font_manager as fm
 
 from dqn import DQN
-from algorithms import Qlerning
-from task import GridWorld
+from task_2048 import Task_2048
 
 def main():
     # 出力画像を保存するディレクトリの作成

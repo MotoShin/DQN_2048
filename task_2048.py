@@ -750,6 +750,22 @@ class Task_2048():
         self.end_flag = False
         self.flag = False
 
+    def state_to_vector(self, board):
+        # 状態を4*4*16の配列で表現
+        MAX_NUM_BIN = 16
+        nums = np.array([int(value) for key, value in board.items()])
+        ss = []
+        for n in nums:
+            s = bin(n)[2:]
+            for _ in range(MAX_NUM_BIN - len(s)):
+                s = '0' + s
+            ss.append(s)
+
+        vec = np.array([int(i) for s in ss for i in s])
+        vec = vec.reshape(4, 4, 16)
+
+        return vec
+
     def step(self, action):
 
         # print("direction: {}".format(self.dirs[action]))
@@ -766,13 +782,16 @@ class Task_2048():
 
         flag = not (self.board == new_board)
 
-        print(flag)
+        # print(flag)
         if flag:
             new_board = self.new_tile_appear(new_board)
         
         self.board = new_board
+        # self.print_board()
 
         numbers = np.array([int(value) for key, value in self.board.items()])
         self.max_num = max(numbers)
 
         self.end_flag = self.end_check()
+
+        return self.state_to_vector(self.board), self.score, self.end_flag
