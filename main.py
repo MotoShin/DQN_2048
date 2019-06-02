@@ -15,16 +15,14 @@ def main():
         os.mkdir('png')
     
     NUM_SIMS = 5
-    EPISODE = 100
+    EPISODE = 10
 
-    env = GridWorld(4, 4)
-
+    env = Task_2048()
     fig_reward = plt.figure()
     ax_reward = fig_reward.add_subplot(111)
 
     agents = {}
     agents.update({"DQN": DQN(env)})
-    agents.update({"Q-Learning": Qlerning(env)})
 
     steps = {}
     for i in agents.keys():

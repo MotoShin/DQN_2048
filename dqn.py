@@ -37,16 +37,16 @@ class Net(nn.Module):
 class DQN():
 
     def __init__(self, env):
-        self.state_num = env.state_num
-        self.action_num = env.n_actions
         self.curr_state = 0
         self.next_state = 0
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.vector_size = env.vetor_size
+        self.action_num = env.n_actions
 
         ### DQN 用の変数 ###
-        self.policy_net = Net(self.state_num, self.action_num)
-        self.temp_net = Net(self.state_num, self.action_num)
-        self.target_net = Net(self.state_num, self.action_num)
+        self.policy_net = Net(self.vector_size, self.action_num)
+        self.temp_net = Net(self.vector_size, self.action_num)
+        self.target_net = Net(self.vector_size, self.action_num)
         self.temp_net.load_state_dict(self.policy_net.state_dict())
         self.target_net.load_state_dict(self.policy_net.state_dict())
         self.target_net.eval()
@@ -98,6 +98,7 @@ class DQN():
                 rewards.append(b[2][0].numpy())
                 next_states.append(b[3][0].numpy())
             
+            # print(curr_states)
             curr_states = np.array(curr_states, dtype=np.float)
             actions = np.array(actions, dtype=np.int32)
             rewards = np.array(rewards, dtype=np.float)
@@ -157,16 +158,14 @@ class DQN():
                 print("start")
 
                 while True:
-                    state = torch.tensor([env.feature_vector()], dtype=torch.float32, device=device)
+                    state = torch.tensor([env.state_to_vector(env.board)], dtype=torch.float32, device=device)
                     chosen_action = self.select_action(state, t)
-                    reward = env.give_reward(self.curr_state, chosen_action.item())
-                    # print(reward)
-                    # print("{}, {}, {}".format(self.curr_state, chosen_action.item(), sum_reward))
-                    self.next_state, done = env.change_state(self.curr_state, chosen_action.item())
+                    _, reward, done = env.step(chosen_action)
                     reward = torch.tensor([reward], device=device)
                     action = torch.tensor([chosen_action], device=device)
-                    next_state = torch.tensor([np.eye(env.state_num)[self.next_state]], dtype=torch.float32, device=device)
+                    next_state = torch.tensor([np.eye(env.vetor_size)[self.next_state]], dtype=torch.float32, device=device)
 
+                    # print(state)
                     self.memory.append([state, action, reward, next_state])
                     if len(self.memory) > self.memory_size:
                         self.memory.pop(0)
@@ -180,8 +179,8 @@ class DQN():
                     if done:
                         print("end, {}, {}".format(sim, t))
                         print()
-                        for i in range(self.state_num):
-                            feature_vector = np.eye(self.state_num)[i]
+                        for i in range(self.vector_size):
+                            feature_vector = np.eye(self.vector_size)[i]
                             state = torch.tensor([feature_vector], dtype=torch.float32, device=device)
                             print("{:02}: {}".format(i, self.policy_net(state).data))
                         print()

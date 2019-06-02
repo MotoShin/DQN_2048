@@ -34,6 +34,9 @@ class Task_2048():
         self.cnt = 0
         self.end_flag = False
         self.dirs = ['u', 'r', 'd', 'l']
+        self.vetor_size = 4 * 4 * 16
+        self.n_actions = 4
+        self.reset()
 
     def print_board(self):
         # 盤を見やすく表示
@@ -762,7 +765,8 @@ class Task_2048():
             ss.append(s)
 
         vec = np.array([int(i) for s in ss for i in s])
-        vec = vec.reshape(4, 4, 16)
+        # vec = vec.reshape(4, 4, 16)
+        # vec = vec.reshape(4 * 4 * 16)
 
         return vec
 
