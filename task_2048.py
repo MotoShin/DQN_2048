@@ -59,7 +59,7 @@ class Task_2048():
         next_board[c] = '0'
         next_board[d] = str(c_num + d_num)
         if end==0:
-            print('{0}+{1}={2}'.format(c_num,d_num,c_num+d_num))
+            # print('{0}+{1}={2}'.format(c_num,d_num,c_num+d_num))
             self.score += c_num + d_num
         return next_board# タイルの結合
 

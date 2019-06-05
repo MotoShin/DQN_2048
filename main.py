@@ -14,8 +14,8 @@ def main():
     if not os.path.exists('png'):
         os.mkdir('png')
     
-    NUM_SIMS = 5
-    EPISODE = 10
+    NUM_SIMS = 1
+    EPISODE = 20
 
     env = Task_2048()
     fig_reward = plt.figure()

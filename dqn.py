@@ -165,6 +165,12 @@ class DQN():
                     action = torch.tensor([chosen_action], device=device)
                     next_state = torch.tensor([np.eye(env.vetor_size)[self.next_state]], dtype=torch.float32, device=device)
 
+                    # 実行した行動の表示
+                    print("action: {}".format(env.dirs[chosen_action]))
+                    # 盤面の表示
+                    env.print_board()
+                    print()
+
                     # print(state)
                     self.memory.append([state, action, reward, next_state])
                     if len(self.memory) > self.memory_size:
@@ -182,7 +188,7 @@ class DQN():
                         for i in range(self.vector_size):
                             feature_vector = np.eye(self.vector_size)[i]
                             state = torch.tensor([feature_vector], dtype=torch.float32, device=device)
-                            print("{:02}: {}".format(i, self.policy_net(state).data))
+                            # print("{:02}: {}".format(i, self.policy_net(state).data))
                         print()
                         break
                 if t % self.TARGET_UPDATE == 0:
