@@ -15,7 +15,7 @@ def main():
         os.mkdir('png')
     
     NUM_SIMS = 1
-    EPISODE = 20
+    EPISODE = 30
 
     env = Task_2048()
     fig_reward = plt.figure()
@@ -25,10 +25,12 @@ def main():
     agents.update({"DQN": DQN(env)})
 
     steps = {}
+    maximum_nums = {}
     for i in agents.keys():
         results = agents[i].run(env, NUM_SIMS, EPISODE)
         ax_reward.plot(results[1] / NUM_SIMS, label=i)
         steps.update({i: results[2]})
+        maximum_nums.update({i: results[3]})
 
     ax_reward.set_xlabel("Episode")
     ax_reward.set_ylabel("Reward")
@@ -51,6 +53,21 @@ def main():
     for label in ax_steps.get_yticklabels():
         label.set_fontproperties(font)
     fig_steps.savefig("png/Steps.png")
+    plt.close()
+
+    fig_steps = plt.figure()
+    ax_steps = fig_steps.add_subplot(111)
+    for i in agents.keys():
+        ax_steps.plot(steps[i] / NUM_SIMS, label=i)
+    ax_steps.set_xlabel("Episode", fontsize=20)
+    ax_steps.set_ylabel("Maximum Number", fontsize=20)
+    # plt.ylim([0, 80])
+    ax_steps.legend(loc="upper right")
+    plt.legend(ncol=1, frameon=False, fontsize=18) # 各凡例が横に並ぶ数（default: 1）
+    font = fm.FontProperties(size=20)
+    for label in ax_steps.get_yticklabels():
+        label.set_fontproperties(font)
+    fig_steps.savefig("png/MaxNum.png")
     plt.close()
 
 main()

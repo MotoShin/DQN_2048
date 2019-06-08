@@ -138,6 +138,7 @@ class DQN():
         times = np.zeros(num_sims * episode)
         sum_rewards = np.zeros(episode)
         sum_steps = np.zeros(episode)
+        maximum_numbers = np.zeros(episode)
         device = self.device
 
         p = ProgressBar(num_sims)  # 最大値100
@@ -196,7 +197,8 @@ class DQN():
                 
                 sum_rewards[t] += sum_reward
                 sum_steps[t] += sum_step
+                maximum_numbers[t] += env.maximum_num()
 
-        return times, sum_rewards, sum_steps
+        return times, sum_rewards, sum_steps, maximum_numbers
 
 

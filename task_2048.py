@@ -59,6 +59,7 @@ class Task_2048():
         next_board[c] = '0'
         next_board[d] = str(c_num + d_num)
         if end==0:
+            # スコアの計算式をひたすら記述する
             # print('{0}+{1}={2}'.format(c_num,d_num,c_num+d_num))
             self.score += c_num + d_num
         return next_board# タイルの結合
@@ -766,12 +767,18 @@ class Task_2048():
 
         vec = np.array([int(i) for s in ss for i in s])
         # vec = vec.reshape(4, 4, 16)
-        # vec = vec.reshape(4 * 4 * 16)
 
         return vec
 
-    def step(self, action):
+    def maximum_num(self):
+        # 盤面の中で最も大きな数字を返すメソッド
+        temp = self.board.values()
+        temp_i = [int(s) for s in temp]
+        
+        return max(temp_i)
 
+    def step(self, action):
+        # TODO:右へのフリックの挙動がおかしい
         # print("direction: {}".format(self.dirs[action]))
         if self.dirs[action] == 'r':
             new_board = self.flick_board(self.board, 'right', 0)
